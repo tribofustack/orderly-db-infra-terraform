@@ -17,6 +17,12 @@ jobs:
         service_account_key: ${{ secrets.GCP_CREDENTIALS }}
         export_default_credentials: true
 
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v1
+      with:
+        terraform_wrapper: false
+        terraform_version: 1.6.1  
+
     - name: Initialize Terraform
       run: |
         terraform init \
