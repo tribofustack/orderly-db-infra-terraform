@@ -1,20 +1,20 @@
 provider "google" {
   credentials = file("postech-415418-1cc45ad2638e.json")
-  project     = "postech-415418"
-  region      = "us-central1"
-  zone        = "us-central1-c"
+  project     = var.project_id
+  region      = var.region
+  zone        = var.zone
 }
 
 terraform {
   backend "gcs" {
-    bucket = "popostech"
-    prefix = "terraform/db"
+    # bucket = "popostech"
+    # prefix = "terraform/db"
   }
 }
 
 resource "google_sql_database_instance" "instance" {
   name             = "postgres"
-  region           = "us-central1"
+  region           = var.region
   database_version = "POSTGRES_14"
   settings {
     tier = "db-f1-micro"
@@ -32,9 +32,9 @@ resource "google_sql_database_instance" "instance" {
 }
 
 resource "google_sql_user" "user" {
-  name     = "postgres"
   instance = google_sql_database_instance.instance.name
-  password = "postgres"
+  name     = var.db_username
+  password = var.db_password
 }
 
 output "db_instance_ip" {

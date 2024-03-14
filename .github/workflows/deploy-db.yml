@@ -1,6 +1,6 @@
 name: Deploy Terraform orderly db Configuration
 
-on: [push]
+on: [push, workflow_dispatch]
 
 jobs:
   deploy:
@@ -17,8 +17,23 @@ jobs:
         service_account_key: ${{ secrets.GCP_CREDENTIALS }}
         export_default_credentials: true
 
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v1
+      with:
+        terraform_wrapper: false
+        terraform_version: 1.6.1  
+
     - name: Initialize Terraform
-      run: terraform init
+      run: |
+        terraform init \
+        -backend-config="bucket=${{ vars.BUCKET_NAME }}" \
+        -backend-config="prefix=terraform-state/db"
 
     - name: Apply Terraform
-      run: terraform apply -auto-approve
+      run: |
+        terraform apply -auto-approve \
+        -var="project_id=${{ vars.PROJECT_ID }}" \
+        -var="region=${{ vars.REGION }}" \
+        -var="zone=${{ vars.ZONE }}" \
+        -var="db_username=${{ vars.DB_USERNAME }}" \
+        -var="db_password=${{ secrets.DB_PASSWORD }}" \
