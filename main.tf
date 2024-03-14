@@ -1,5 +1,5 @@
 provider "google" {
-  credentials = file("postech-415418-1cc45ad2638e.json")
+  # credentials = file("postech-415418-1cc45ad2638e.json")
   project     = var.project_id
   region      = var.region
   zone        = var.zone
