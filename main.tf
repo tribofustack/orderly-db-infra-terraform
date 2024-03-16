@@ -17,7 +17,7 @@ resource "google_sql_database_instance" "instance" {
     }
   }
   
-  depends_on = [google_project_service.sqladmin, google_project_service.cloudresourcemanager]
+  depends_on = [google_project_service.sqladmin, google_project_service.cloudresourcemanager, google_project_service.serviceusage]
 }
 
 resource "google_sql_database" "database" {
